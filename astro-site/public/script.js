@@ -33,16 +33,6 @@ function buildWeb(spokes, rings) {
   return svg + `</svg>`;
 }
 
-document.querySelectorAll("[data-web]").forEach((el) => {
-  if (el.firstElementChild) return;
-  const [spokes, rings] = el.dataset.web.split(",").map(Number);
-  el.innerHTML = buildWeb(spokes, rings);
-});
-
-// ---------- Small helpers ----------
-const yearEl = document.getElementById("year");
-if (yearEl) yearEl.textContent = new Date().getFullYear();
-
 const header = document.getElementById("header");
 const nav = document.getElementById("nav");
 const burger = document.getElementById("burger");
