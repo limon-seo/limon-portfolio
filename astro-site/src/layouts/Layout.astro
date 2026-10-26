@@ -1,9 +1,14 @@
 ---
+const site = Astro.site ?? new URL('https://limon-seo.github.io');
+const base = import.meta.env.BASE_URL;
+const canonical = new URL(Astro.url.pathname, site).href;
 const title = "MD. Shafiqul Islam Limon | AI SEO Specialist";
 const description = "MD. Shafiqul Islam (Limon) — AI SEO Specialist & Digital Marketing Executive in Dhaka, Bangladesh. Technical SEO, schema, Core Web Vitals and organic growth.";
-const canonical = "https://limon-seo.github.io/limon-portfolio/";
 const linkedin = "https://bd.linkedin.com/in/md-shafiqul-islam-limon";
 const email = "Shafiqul.limon@outlook.com";
+const ogImage = new URL(`${base}og-image.png`, site).href;
+const favicon = new URL(`${base}favicon.svg`, site).href;
+const sitemap = new URL(`${base}sitemap.xml`, site).href;
 
 const schema = {
   "@context": "https://schema.org",
@@ -12,13 +17,14 @@ const schema = {
       "@type": "Person",
       "@id": `${canonical}#person`,
       "name": "MD. Shafiqul Islam Limon",
-      "alternateName": "Shafiqul Islam Limon",
+      "alternateName": ["Shafiqul Islam Limon", "Limon"],
       "givenName": "Shafiqul",
       "additionalName": "Limon",
       "familyName": "Islam",
       "jobTitle": "AI SEO Specialist",
       "description": description,
       "url": canonical,
+      "image": ogImage,
       "email": `mailto:${email}`,
       "telephone": "+8801861477113",
       "address": {
@@ -30,6 +36,10 @@ const schema = {
         "@type": "Organization",
         "name": "Codeware Limited"
       },
+      "alumniOf": {
+        "@type": "EducationalOrganization",
+        "name": "Habibullah Bahar University College"
+      },
       "knowsAbout": [
         "Search Engine Optimization",
         "AI SEO",
@@ -37,21 +47,27 @@ const schema = {
         "Schema Markup",
         "Core Web Vitals",
         "Keyword Research",
-        "Link Building"
+        "Link Building",
+        "Local SEO"
       ],
-      "sameAs": [
-        linkedin,
-        `mailto:${email}`
-      ]
+      "knowsLanguage": [
+        { "@type": "Language", "name": "Bangla", "alternateName": "bn" },
+        { "@type": "Language", "name": "English", "alternateName": "en" }
+      ],
+      "sameAs": [linkedin]
     },
     {
       "@type": "WebSite",
       "@id": `${canonical}#website`,
       "url": canonical,
-      "name": title,
+      "name": "MD. Shafiqul Islam Limon — SEO Portfolio",
+      "alternateName": "Limon.seo",
       "description": description,
       "inLanguage": "en",
       "publisher": {
+        "@id": `${canonical}#person`
+      },
+      "author": {
         "@id": `${canonical}#person`
       }
     },
@@ -70,7 +86,13 @@ const schema = {
       },
       "about": {
         "@id": `${canonical}#person`
-      }
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": ogImage
+      },
+      "dateCreated": "2026-10-26",
+      "dateModified": "2026-10-26"
     }
   ]
 };
@@ -84,39 +106,49 @@ const schema = {
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
-  
+  <link rel="icon" type="image/svg+xml" href={favicon} />
+  <link rel="sitemap" type="application/xml" href={sitemap} />
+  <meta name="theme-color" content="#0b0b0f" />
+
   <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content="profile" />
   <meta property="og:url" content={canonical} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="MD. Shafiqul Islam Limon — AI SEO Specialist" />
+  <meta property="og:site_name" content="Limon.seo" />
   <meta property="og:locale" content="en_US" />
-  
+
   <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content={canonical} />
-  <meta property="twitter:title" content={title} />
-  <meta property="twitter:description" content={description} />
-  
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content={canonical} />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+  <meta name="twitter:image:alt" content="MD. Shafiqul Islam Limon — AI SEO Specialist" />
+
   <!-- Additional SEO -->
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="author" content="MD. Shafiqul Islam Limon" />
   <meta name="keywords" content="SEO Specialist, AI SEO Specialist, Technical SEO, Schema Markup, Core Web Vitals, SEO Bangladesh, Dhaka SEO Expert" />
   <meta name="google-site-verification" content="COIrzrI452_nwI0f2cimwZ9x2MMnGS8wr7hlRu1oHHc" />
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Permanent+Marker&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-  <link rel="stylesheet" href="/style.css" />
-  
+  <link rel="stylesheet" href={`${base}style.css`} />
+
   <!-- Structured Data -->
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 </head>
 <body>
   <slot />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" is:inline></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" is:inline></script>
-  <script src="/script.js" is:inline></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer is:inline></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer is:inline></script>
+  <script src={`${base}script.js`} defer is:inline></script>
 </body>
 </html>
