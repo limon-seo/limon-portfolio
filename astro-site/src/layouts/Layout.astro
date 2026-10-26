@@ -1,0 +1,122 @@
+---
+const title = "MD. Shafiqul Islam Limon | AI SEO Specialist";
+const description = "MD. Shafiqul Islam (Limon) — AI SEO Specialist & Digital Marketing Executive in Dhaka, Bangladesh. Technical SEO, schema, Core Web Vitals and organic growth.";
+const canonical = "https://limon-seo.github.io/limon-portfolio/";
+const linkedin = "https://bd.linkedin.com/in/md-shafiqul-islam-limon";
+const email = "Shafiqul.limon@outlook.com";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${canonical}#person`,
+      "name": "MD. Shafiqul Islam Limon",
+      "alternateName": "Shafiqul Islam Limon",
+      "givenName": "Shafiqul",
+      "additionalName": "Limon",
+      "familyName": "Islam",
+      "jobTitle": "AI SEO Specialist",
+      "description": description,
+      "url": canonical,
+      "email": `mailto:${email}`,
+      "telephone": "+8801861477113",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Dhaka",
+        "addressCountry": "Bangladesh"
+      },
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Codeware Limited"
+      },
+      "knowsAbout": [
+        "Search Engine Optimization",
+        "AI SEO",
+        "Technical SEO",
+        "Schema Markup",
+        "Core Web Vitals",
+        "Keyword Research",
+        "Link Building"
+      ],
+      "sameAs": [
+        linkedin,
+        `mailto:${email}`
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${canonical}#website`,
+      "url": canonical,
+      "name": title,
+      "description": description,
+      "inLanguage": "en",
+      "publisher": {
+        "@id": `${canonical}#person`
+      }
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": `${canonical}#profilepage`,
+      "url": canonical,
+      "name": title,
+      "description": description,
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": `${canonical}#website`
+      },
+      "mainEntity": {
+        "@id": `${canonical}#person`
+      },
+      "about": {
+        "@id": `${canonical}#person`
+      }
+    }
+  ]
+};
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:locale" content="en_US" />
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content={canonical} />
+  <meta property="twitter:title" content={title} />
+  <meta property="twitter:description" content={description} />
+  
+  <!-- Additional SEO -->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="author" content="MD. Shafiqul Islam Limon" />
+  <meta name="keywords" content="SEO Specialist, AI SEO Specialist, Technical SEO, Schema Markup, Core Web Vitals, SEO Bangladesh, Dhaka SEO Expert" />
+  <meta name="google-site-verification" content="COIrzrI452_nwI0f2cimwZ9x2MMnGS8wr7hlRu1oHHc" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Permanent+Marker&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="/style.css" />
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+</head>
+<body>
+  <slot />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" is:inline></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" is:inline></script>
+  <script src="/script.js" is:inline></script>
+</body>
+</html>
