@@ -70,6 +70,10 @@ ul { list-style: none; }
   background: radial-gradient(circle at center, var(--red) 0%, var(--red-dark) 55%, #4a060b 100%);
   display: grid; place-items: center;
   overflow: hidden;
+  animation: preloader-failsafe .01s linear 5.5s forwards;
+}
+@keyframes preloader-failsafe {
+  to { opacity: 0; visibility: hidden; pointer-events: none; }
 }
 .preloader__web {
   position: absolute; width: 160vmax; height: 160vmax;
@@ -533,6 +537,34 @@ ul { list-style: none; }
 /* ---------- Footer ---------- */
 .footer { text-align: center; padding: 26px 16px; background: var(--ink); border-top: 3px solid var(--red); color: var(--muted); font-size: .9rem; }
 .footer i { color: var(--red); }
+
+/* ---------- Crawler / no-JS / reduced-motion fallback ---------- */
+.no-anim #preloader,
+.no-anim .cursor,
+.no-anim .scroll-thread { display: none !important; }
+
+.no-anim .reveal,
+.no-anim .reveal-side,
+.no-anim .hero__title .word,
+.no-anim .hero__tag,
+.no-anim .hero__role,
+.no-anim .hero__desc,
+.no-anim .hero__btns .btn,
+.no-anim .hero__social a,
+.no-anim .emblem__web svg,
+.no-anim .emblem__core,
+.no-anim .bubble,
+.no-anim #hangingSpider,
+.no-anim .header {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

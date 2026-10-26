@@ -110,6 +110,22 @@ const schema = {
   <link rel="sitemap" type="application/xml" href={sitemap} />
   <meta name="theme-color" content="#0b0b0f" />
 
+  <script is:inline>
+    (function () {
+      var ua = navigator.userAgent || "";
+      var isBot = /bot|crawler|spider|googlebot|bingbot|slurp|duckduckbot|baiduspider|yandex/i.test(ua);
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (isBot || reduce) document.documentElement.classList.add("no-anim");
+      document.documentElement.classList.add("js");
+    })();
+  </script>
+  <noscript>
+    <style>
+      #preloader, .cursor, .scroll-thread { display: none !important; }
+      .reveal, .reveal-side { opacity: 1 !important; transform: none !important; }
+    </style>
+  </noscript>
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="profile" />
   <meta property="og:url" content={canonical} />

@@ -1,0 +1,44 @@
+---
+interface Props {
+  spokes?: number;
+  rings?: number;
+  class?: string;
+}
+
+const { spokes = 12, rings = 7, class: className } = Astro.props;
+
+const R = 100;
+const pt = (a: number, r: number) => [Math.cos(a) * r, Math.sin(a) * r].map((n) => n.toFixed(2));
+
+const spokesCoords = Array.from({ length: spokes }, (_, i) => {
+  const [x, y] = pt((i / spokes) * Math.PI * 2, R);
+  return { x, y };
+});
+
+const ringPaths = Array.from({ length: rings }, (_, index) => {
+  const radius = (R * (index + 1)) / rings;
+  let d = '';
+  for (let i = 0; i <= spokes; i++) {
+    const a = (i / spokes) * Math.PI * 2;
+    const [x, y] = pt(a, radius);
+    if (i === 0) {
+      d += `M${x} ${y}`;
+    } else {
+      const [cx, cy] = pt(a - Math.PI / spokes, radius * 0.82);
+      d += ` Q${cx} ${cy} ${x} ${y}`;
+    }
+  }
+  return d;
+});
+---
+
+<div class={className} data-web={`${spokes},${rings}`}>
+  <svg viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg">
+    {spokesCoords.map(({ x, y }) => (
+      <line x1="0" y1="0" x2={x} y2={y} stroke-width="1" vector-effect="non-scaling-stroke" />
+    ))}
+    {ringPaths.map((d) => (
+      <path d={d} stroke-width="1" vector-effect="non-scaling-stroke" />
+    ))}
+  </svg>
+</div>

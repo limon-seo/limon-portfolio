@@ -34,63 +34,36 @@ function buildWeb(spokes, rings) {
 }
 
 document.querySelectorAll("[data-web]").forEach((el) => {
+  if (el.firstElementChild) return;
   const [spokes, rings] = el.dataset.web.split(",").map(Number);
   el.innerHTML = buildWeb(spokes, rings);
 });
 
 // ---------- Small helpers ----------
-document.getElementById("year").textContent = new Date().getFullYear();
+const yearEl = document.getElementById("year");
+if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 const header = document.getElementById("header");
 const nav = document.getElementById("nav");
 const burger = document.getElementById("burger");
 
-burger.addEventListener("click", () => {
-  burger.classList.toggle("open");
-  nav.classList.toggle("open");
-});
-nav.querySelectorAll("a").forEach((a) =>
-  a.addEventListener("click", () => {
-    burger.classList.remove("open");
-    nav.classList.remove("open");
-  })
-);
+if (burger && nav) {
+  burger.addEventListener("click", () => {
+    burger.classList.toggle("open");
+    nav.classList.toggle("open");
+  });
+  nav.querySelectorAll("a").forEach((a) =>
+    a.addEventListener("click", () => {
+      burger.classList.remove("open");
+      nav.classList.remove("open");
+    })
+  );
+}
 
-window.addEventListener("scroll", () => {
-  header.classList.toggle("scrolled", window.scrollY > 40);
-});
-
-// ---------- Typing effect ----------
-const roles = [
-  "SEO Specialist",
-  "Technical SEO Auditor",
-  "Schema Markup Builder",
-  "Core Web Vitals Fixer",
-  "Organic Growth Strategist",
-];
-const typed = document.getElementById("typed");
-let roleIdx = 0;
-let charIdx = 0;
-let deleting = false;
-
-function typeLoop() {
-  const word = roles[roleIdx];
-  typed.textContent = word.slice(0, charIdx);
-
-  if (!deleting && charIdx < word.length) {
-    charIdx++;
-    setTimeout(typeLoop, 70);
-  } else if (!deleting) {
-    deleting = true;
-    setTimeout(typeLoop, 1600);
-  } else if (charIdx > 0) {
-    charIdx--;
-    setTimeout(typeLoop, 35);
-  } else {
-    deleting = false;
-    roleIdx = (roleIdx + 1) % roles.length;
-    setTimeout(typeLoop, 300);
-  }
+if (header) {
+  window.addEventListener("scroll", () => {
+    header.classList.toggle("scrolled", window.scrollY > 40);
+  });
 }
 
 // ---------- Power card mouse glow ----------
@@ -102,13 +75,30 @@ document.querySelectorAll(".power").forEach((card) => {
   });
 });
 
-// ---------- No GSAP? show everything and stop here ----------
-if (typeof gsap === "undefined") {
-  document.getElementById("preloader").remove();
+// ---------- Progressive enhancement ----------
+// Content is server-rendered. Animations are optional and must never hide it.
+const noAnim = document.documentElement.classList.contains("no-anim");
+
+function cleanup() {
+  const preloader = document.getElementById("preloader");
+  if (preloader) preloader.remove();
   document.body.classList.remove("loading");
-  typeLoop();
+}
+
+// Safety net: never let the preloader block the page.
+window.setTimeout(cleanup, 5000);
+
+if (noAnim) {
+  cleanup();
+} else if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") {
+  cleanup();
 } else {
-  initAnimations();
+  try {
+    initAnimations();
+  } catch (err) {
+    console.error(err);
+    cleanup();
+  }
 }
 
 function initAnimations() {
@@ -143,8 +133,7 @@ function initAnimations() {
     .from(".emblem__core", { scale: 0, duration: 0.9, ease: "elastic.out(1, 0.5)" }, "<0.2")
     .from(".bubble", { scale: 0, opacity: 0, duration: 0.5, stagger: 0.15, ease: "back.out(3)" }, "<0.4")
     .from("#hangingSpider", { yPercent: -100, duration: 1.2, ease: "bounce.out" }, "<")
-    .from(".header", { y: -100, duration: 0.6 }, "<")
-    .add(typeLoop, "<");
+    .from(".header", { y: -100, duration: 0.6 }, "<");
 
   if (reduceMotion) intro.progress(1);
 
@@ -195,6 +184,7 @@ function initAnimations() {
       rotate: gsap.utils.random(-3, 3),
       duration: 0.9,
       ease: "power3.out",
+      immediateRender: false,
       scrollTrigger: { trigger: el, start: "top 88%" },
     });
   });
@@ -205,6 +195,7 @@ function initAnimations() {
       opacity: 0,
       duration: 1,
       ease: "power3.out",
+      immediateRender: false,
       scrollTrigger: { trigger: el, start: "top 82%" },
     });
   });
@@ -214,6 +205,7 @@ function initAnimations() {
     rotate: -60,
     duration: 0.6,
     ease: "back.out(4)",
+    immediateRender: false,
     scrollTrigger: { trigger: ".about__panel", start: "top 70%" },
   });
 
@@ -223,6 +215,7 @@ function initAnimations() {
     duration: 0.35,
     stagger: 0.02,
     ease: "back.out(2)",
+    immediateRender: false,
     scrollTrigger: { trigger: ".skills__grid", start: "top 75%" },
   });
 
@@ -232,6 +225,7 @@ function initAnimations() {
     stagger: 0.12,
     duration: 0.5,
     ease: "back.out(2)",
+    immediateRender: false,
     scrollTrigger: { trigger: ".comic-strip", start: "top 85%" },
   });
 
@@ -254,28 +248,19 @@ function initAnimations() {
     scrollTrigger: { trigger: ".contact", start: "top bottom", end: "bottom bottom", scrub: true },
   });
 
-  // ---------- Counters ----------
-  document.querySelectorAll(".counter").forEach((el) => {
-    const to = parseFloat(el.dataset.to);
-    const dec = parseInt(el.dataset.dec, 10);
-    const obj = { v: 0 };
-    gsap.to(obj, {
-      v: to,
-      duration: 2,
-      ease: "power2.out",
-      scrollTrigger: { trigger: el, start: "top 90%" },
-      onUpdate: () => (el.textContent = obj.v.toFixed(dec)),
-    });
-  });
-
   // ---------- Language bars ----------
   document.querySelectorAll(".lang__bar i").forEach((bar) => {
-    gsap.to(bar, {
-      width: `${bar.dataset.w}%`,
-      duration: 1.4,
-      ease: "power3.out",
-      scrollTrigger: { trigger: bar, start: "top 92%" },
-    });
+    gsap.fromTo(
+      bar,
+      { width: 0 },
+      {
+        width: `${bar.dataset.w}%`,
+        duration: 1.4,
+        ease: "power3.out",
+        immediateRender: false,
+        scrollTrigger: { trigger: bar, start: "top 92%" },
+      }
+    );
   });
 
   // ---------- Active nav link ----------
